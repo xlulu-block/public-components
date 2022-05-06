@@ -28,32 +28,37 @@ export default {
     },
     selection: Boolean,
     index: Boolean,
+    url: {
+      type: String,
+      default: "",
+      require: true,
+    },
+    methods: {
+      type: String,
+      default: "post",
+      require: true,
+    },
   },
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
     };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    getList() {
+      // 父组件没传url的情况
+      const url = this.url;
+      if (!url) {
+        console.log("请求地址不存在！");
+        return false;
+      }
+      this.$axios({ url: this.url, method: this.methods }).then((res) => {
+        this.tableData = res.data.data;
+      });
+    },
   },
 };
 </script>

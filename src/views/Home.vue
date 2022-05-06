@@ -1,5 +1,5 @@
 <template>
-  <a-table :column="column" selection index>
+  <a-table :column="column" selection index url="/api/name/">
     <template v-slot:operation="slot">
       <el-button type="primary" @click="toView(slot.data)">查看</el-button>
       <el-button type="danger">删除</el-button>
@@ -26,7 +26,7 @@ export default {
           },
         },
         { label: "姓名", prop: "name" },
-        { label: "地址", prop: "address" },
+        { label: "性别", prop: "gender" },
         // 插槽
         {
           type: "slot",
@@ -37,6 +37,7 @@ export default {
       ],
     };
   },
+  mounted() {},
   methods: {
     toView(data) {
       console.log(data);
