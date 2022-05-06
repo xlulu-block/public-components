@@ -1,13 +1,34 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="日期" width="180"> </el-table-column>
-    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="address" label="地址"> </el-table-column>
+    <el-table-column v-if="index" type="index"></el-table-column>
+    <el-table-column v-if="selection" type="selection"></el-table-column>
+    <template v-for="item in column">
+      <el-table-column v-if="item.type=== 'function'" :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width">
+        <template slot-scope="scope">
+          <div v-html="item.callback&&item.callback(scope.row)"></div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="item.type=== 'slot'" :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width">
+        <template slot-scope="scope">
+          <!-- 作用域插槽 -->
+          <slot :name="item.slot_name" :data="scope.row"></slot>
+        </template>
+      </el-table-column>
+      <el-table-column v-else :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width"></el-table-column>
+    </template>
   </el-table>
 </template>
 
   <script>
 export default {
+  props: {
+    column: {
+      type: Array,
+      default: () => [],
+    },
+    selection: Boolean,
+    index: Boolean,
+  },
   data() {
     return {
       tableData: [
