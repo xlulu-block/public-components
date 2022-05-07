@@ -1,5 +1,5 @@
 <template>
-  <a-table :column="column" selection index url="/api/name/">
+  <a-table ref="table" @onLoad="onLoad" :column="column" :checkList.sync="checkList" :init-request="false" selection index url="/api/name/" :params="params" :formatData="formatData">
     <template v-slot:operation="slot">
       <el-button type="primary" @click="toView(slot.data)">查看</el-button>
       <el-button type="danger">删除</el-button>
@@ -16,15 +16,6 @@ export default {
   data() {
     return {
       column: [
-        {
-          type: "function",
-          label: "URL地址",
-          prop: "date",
-          // 这里可以将后台返回的数据进行格式化处理
-          callback: (data) => {
-            return data.date;
-          },
-        },
         { label: "姓名", prop: "name" },
         { label: "性别", prop: "gender" },
         // 插槽
@@ -35,12 +26,40 @@ export default {
           slot_name: "operation",
         },
       ],
+      data: { name: "王五" },
+      params: { name: "张三" },
+      checkList: [], //表格复选框数据
     };
   },
-  mounted() {},
+  mounted() {
+    //父组件延迟两秒后调用接口
+    setTimeout(() => {
+      this.$refs.table.handlerDataList();
+    }, 2000);
+  },
   methods: {
+    // 测试点击查看
     toView(data) {
       console.log(data);
+    },
+    // 传入子组件的回调函数
+    onLoad(data) {
+      console.log(data);
+    },
+    // 传入子组件的处理数据格式函数
+    formatData(data) {
+      data.forEach((item) => {
+        item.name = "张三";
+      });
+      return data;
+    },
+  },
+  watch: {
+    // 监听复选框数据变化
+    checkList: {
+      handler(val) {
+        console.log(val);
+      },
     },
   },
 };
