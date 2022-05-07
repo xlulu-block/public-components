@@ -1,26 +1,37 @@
 <template>
-  <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+  <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange" @sort-change="sortChange">
     <el-table-column v-if="index" type="index"></el-table-column>
     <el-table-column v-if="selection" type="selection"></el-table-column>
-    <template v-for="item in column">
-      <el-table-column v-if="item.type=== 'function'" :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width">
-        <template slot-scope="scope">
-          <div v-html="item.callback&&item.callback(scope.row)"></div>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="item.type=== 'slot'" :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width">
-        <template slot-scope="scope">
-          <!-- 作用域插槽 -->
-          <slot :name="item.slot_name" :data="scope.row"></slot>
-        </template>
-      </el-table-column>
-      <el-table-column v-else :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width"></el-table-column>
-    </template>
+    <el-table-column v-for="item in column" :render-header="item.render_header" :sortable="item.sortable" :sort-by="item.sort_by" :prop="item.prop" :key="item.prop" :label="item.label" :width="item.width">
+      <template slot-scope="scope">
+        <!-- 作用域插槽 -->
+        <slot v-if="item.type === 'slot'" :name="item.slot_name" :data="scope.row"></slot>
+        <!-- 如果没传type就默认组件为文本类型的组件 ：data：当前数据  config当前的配置项-->
+        <component v-else :is="!item.type?'com-text':`com-${item.type}`" :data="scope.row" :config="item" :prop="item.prop"></component>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
   <script>
+//自动化规则，根据父组件传递的type属性，自动读取到目录文件
+const modules = {};
+//（文件路径，是否自动读取下层文件，读取具体的文件名）
+const files = require.context("../control", true, /\index.vue$/);
+// keys()方法，将遍历的数组/对象的索引/键名生成为一个新数组
+files.keys().forEach((item) => {
+  // 将具体的文件名取出来
+  const key = item.split("/");
+  const name = key[1];
+  // 组件集成
+  modules[`com-${name}`] = files(item).default;
+});
+console.log(modules);
 export default {
+  // 动态组件
+  components: {
+    ...modules,
+  },
   props: {
     // 表头数据
     column: {
@@ -113,6 +124,14 @@ export default {
     handlerDataList() {
       this.getList();
     },
+    // 排序函数
+    sortChange({ column, prop, order }) {
+      const sort_by = column.sortBy;
+      // 调用远程排序的接口一般传这两个参数即可
+      console.log(sort_by, order);
+    },
   },
 };
 </script>
+<style scoped>
+</style>

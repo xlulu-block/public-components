@@ -1,5 +1,5 @@
 <template>
-  <a-table ref="table" @onLoad="onLoad" :column="column" :checkList.sync="checkList" :init-request="false" selection index url="/api/name/" :params="params" :formatData="formatData">
+  <a-table ref="table" @onLoad="onLoad" :column="column" :checkList.sync="checkList" :init-request="true" selection index url="/api/name/" :params="params" :formatData="formatData">
     <template v-slot:operation="slot">
       <el-button type="primary" @click="toView(slot.data)">查看</el-button>
       <el-button type="danger">删除</el-button>
@@ -17,13 +17,31 @@ export default {
     return {
       column: [
         { label: "姓名", prop: "name" },
-        { label: "性别", prop: "gender" },
+        {
+          type: "function",
+          label: "性别",
+          prop: "gender",
+          sortable: "custom",
+          sort_by: "a.xxx",
+          callback: (data) => {
+            return data.gender;
+          },
+        }, //sortable设为custom为远程排序，设置sortby属性时，按照传递的参数进行排序
         // 插槽
         {
           type: "slot",
           label: "操作",
           prop: "operation",
           slot_name: "operation",
+          //自定义表头
+          render_header: (h, { column, $index }) => {
+            return (
+              <div>
+                <p>操作</p>
+                <el-input value="123" />
+              </div>
+            );
+          },
         },
       ],
       data: { name: "王五" },
@@ -33,9 +51,9 @@ export default {
   },
   mounted() {
     //父组件延迟两秒后调用接口
-    setTimeout(() => {
-      this.$refs.table.handlerDataList();
-    }, 2000);
+    // setTimeout(() => {
+    //   this.$refs.table.handlerDataList();
+    // }, 2000);
   },
   methods: {
     // 测试点击查看
