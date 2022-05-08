@@ -1,8 +1,20 @@
 <template>
-  <a-table ref="table" @onLoad="onLoad" :column="column" :checkList.sync="checkList" :init-request="true" selection index url="/api/name/" :params="params" :formatData="formatData">
+  <a-table
+    ref="table"
+    @onLoad="onLoad"
+    :column="column"
+    :checkList.sync="checkList"
+    :init-request="true"
+    selection
+    index
+    url="/api/name/"
+    :params="params"
+    :formatData="formatData"
+  >
     <template v-slot:operation="slot">
       <el-button type="primary" @click="toView(slot.data)">查看</el-button>
       <el-button type="danger">删除</el-button>
+      <!-- <el-button type="danger">删除</el-button> -->
     </template>
   </a-table>
 </template>
