@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-form :item="form_item" :field="form_field"></a-form>
+    <a-form :item="form_item" :field="form_field" :button="button_item" :before-submit="submitForm"></a-form>
   </div>
 </template>
 
@@ -18,19 +18,19 @@ export default {
           type: "input",
           prop: "phone",
           label: "电话",
-          required: true,
           value_type: "phone",
+          max: 11,
           //额外的校验规则
-          rules: [
-            {
-              min: 11,
-              max: 11,
-              message: "长度在11 个字符",
-              trigger: "blur",
-            },
-          ],
+          // rules: [
+          //   {
+          //     min: 11,
+          //     max: 11,
+          //     message: "长度在11 个字符",
+          //     trigger: "blur",
+          //   },
+          // ],
         },
-        { type: "select", prop: "sex", label: "性别", required: true },
+        { type: "select", prop: "sex", label: "性别" },
         { type: "input", prop: "age", label: "年龄", required: true },
       ],
       //form字段，用于绑定v-model
@@ -39,8 +39,30 @@ export default {
         sex: "",
         age: "",
       },
+      // 按钮
+      button_item: [
+        { label: "提交", key: "submit", type: "success" },
+        {
+          label: "重置",
+          key: "cancel",
+          type: "danger",
+          callback: (data) => this.cancel(data),
+        },
+        { label: "其他", key: "other", type: "primary" },
+      ],
     };
   },
-  methods: {},
+  methods: {
+    submitForm() {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject();
+        }, 2000);
+      });
+    },
+    cancel(data) {
+      console.log(data);
+    },
+  },
 };
 </script>

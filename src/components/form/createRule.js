@@ -1,3 +1,4 @@
+import {validatorPhone,validatorEmail} from '@/utils/validator'
 const createRule = (data) => {
   data.forEach((item) => {
     //   遍历数据，如果require为true，说明需要校验
@@ -12,19 +13,16 @@ const createRule = (data) => {
       rules_array.push(rule);
     }
     // 校验手机号
-    if(item.value_type&&item.value==='phone'){
-      // 正则
-      const reg = /^1[3456789]\d{9}$/;
-      // 校验规则
-      const phone=(rule, value, callback) => {
-        if(reg.test(value)) {
-            callback()
-        }else{
-            callback(new Error("请输入11位数字的手机号"))
-        }
+    if(item.value_type&&item.value_type==='phone'){
+    const rule = { validator: validatorPhone , trigger: 'change',required:true }
+    rules_array.push(rule)
     }
-    }
-
+    // 验证邮箱
+     // 校验邮箱
+     if(item.value_type && item.value_type === 'email') {
+      const rule = { validator: validatorEmail , trigger: 'change' }
+      rules_array.push(rule)
+  }
      // 如果父组件传了额外的校验规则，判断是否为数组且长度大于0
   if(item.rules&&Array.isArray(item.rules)&&item.rules.length>0){
     // concat方法会合并两个数组并返回出去
