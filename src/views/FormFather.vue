@@ -30,14 +30,21 @@ export default {
           //   },
           // ],
         },
-        { type: "select", prop: "sex", label: "性别" },
-        { type: "input", prop: "age", label: "年龄", required: true },
+        {
+          type: "select",
+          prop: "class_room",
+          label: "教室",
+          options: [
+            { label: "国际化", value: 1 },
+            { label: "绿化", value: 2 },
+            { label: "沙漠化", value: 3 },
+          ],
+        },
       ],
       //form字段，用于绑定v-model
       form_field: {
-        name: "",
-        sex: "",
-        age: "",
+        phone: "",
+        class_room: "",
       },
       // 按钮
       button_item: [

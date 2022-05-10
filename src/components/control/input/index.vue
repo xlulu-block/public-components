@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-input v-model="value"></el-input>
+    <el-input v-model="val" :maxlength="config.max" @input="inputEnter"></el-input>
   </div>
 </template>
 
@@ -8,17 +8,31 @@
 export default {
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       default: "",
     },
+    config: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  data() {
+    return {
+      val: "",
+    };
   },
   watch: {
     value: {
       handler(newVal) {
-        this.value = newVal;
+        this.val = newVal;
       },
       // 立即监听
       immediate: true,
+    },
+  },
+  methods: {
+    inputEnter() {
+      this.$emit("update:value", this.val);
     },
   },
 };

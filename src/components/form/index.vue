@@ -75,6 +75,7 @@ export default {
     submit(data) {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          console.log(this.field, "通过验证后得到的参数，用于发送请求！");
           if (typeof this.beforeSubmit === "function") {
             this.$set(data, "loading", true);
             this.beforeSubmit()
