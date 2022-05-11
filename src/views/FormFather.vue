@@ -34,12 +34,25 @@ export default {
           type: "select",
           prop: "class_room",
           label: "教室",
-          props: { label: "name" },
+          props: { label: "name" }, //用于匹配后端传的字段
           options: [
             { name: "国际化", value: 1 },
             { name: "绿化", value: 2 },
             { name: "沙漠化", value: 3 },
           ],
+        },
+        // 远程异步获取数据
+        {
+          type: "select",
+          prop: "sync_class_room",
+          label: "异步教室",
+          init_request: true, //开启异步请求
+          methods: "post",
+          url: "/api/classroom/",
+          fetch_search: true, //远程搜索
+          multiple: true, //是否多选
+          keyword: "name", //开启远程搜索时的字段,这里默认设置为name
+          props: { label: "class_name", value: "id" },
         },
       ],
       //form字段，用于绑定v-model
